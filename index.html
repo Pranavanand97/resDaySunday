@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* creating css loader */
+        #loading {
+            width: 2rem;
+            height: 2rem;
+            border: 5px solid #f3f3f3;
+            border-top: 6px solid #9c41f2;
+            border-radius: 100%;
+            margin: auto;
+            visibility: hidden;
+            animation: spin 1s infinite linear;
+        }
+        #loading.display {
+            visibility: visible;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+
+<div class="m-20 pt-10"> 
+    <h1 class="text-3xl lg:text-4xl text-center justify-center font-semibold text-gray-800 dark:text-white"> Know your Application Status </h1>
+</div>
+<div class="flex justify-center">
+    <div class="mb-3 xl:w-96">
+        <div class="input-group relative flex inline-flex items-stretch w-full mb-4">
+        <input type="search" id="searchField" class="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
+        <button id="searchButton" class="btn inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex items-center" type="button">
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="w-4" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
+            </svg>
+        </button>
+        </div>
+    </div>
+</div>
+<hr/>
+<div id="loading"></div>
+<br>
+<div id="resultShowSection"></div>
+
+<script>
+    
+    //Search Status by Typing Reference ID in Search Box..
+
+    const textInput = document.getElementById("searchField");
+    const btn = document.getElementById("searchButton");
+    const loader = document.querySelector("#loading");
+    var url = "https://script.google.com/macros/s/AKfycbxKKswqxumxvVdZ0L10sOlaXufPmRYW_pwE51Z-uumj4MKJ85LN6YIsPO3bk_VJUExuDA/exec";
+    
+    btn.addEventListener("click", fetchHandler);
+    function displayLoading() {
+        loader.classList.add("display");
+    }
+
+    function hideLoading() {
+        loader.classList.remove("display");
+    }
+
+    function fetchHandler(event) {
+        displayLoading()
+        var input = textInput.value;
+        var finalURL = buildURL(input);
+
+        fetch(finalURL)
+            .then(response => response.text())
+            .then(resultFromBackend => {
+                hideLoading()
+                document.getElementById("resultShowSection").innerHTML = `<h1 class="text-3xl lg:text-4xl text-center justify-center font-semibold text-gray-800 dark:text-white"> ${resultFromBackend}</h1>`;
+            })
+    }
+
+    function buildURL(inputData) {
+        return `${url}?id=${inputData}`;
+    }
+
+     //Search Status by Typing Reference ID in Search Box..
+</script>
+            <!-- <script>
+                //Alternate method for searching,But Loading animation not added. 
+                function searchStatus(query){
+                const url = `https://script.google.com/macros/s/AKfycbxKKswqxumxvVdZ0L10sOlaXufPmRYW_pwE51Z-uumj4MKJ85LN6YIsPO3bk_VJUExuDA/exec?id=${query}`;
+                fetch(url).then(response => response.text()).then((textData) => { hideLoading(); document.getElementById("resultShowSection").innerHTML = `<h1 class="text-3xl lg:text-4xl font-semibold text-gray-800 dark:text-white"> ${textData}</h1>
+                `;});
+                }
+                window.onload = () => {
+                    const searchFieldElement = document.getElementById("searchField");
+                    const searchFieldButton = document.getElementById("searchButton");
+                    searchFieldButton.onclick = (event) => {searchStatus(searchFieldElement.value),console.log(searchFieldElement.value);};
+                }
+            </script> -->
+
+        <!-- <script>         
+            //testing for URL redirection, Refer Key.html for further understanding and Logic
+            //working :)
+            //  const jobValueFromUrl = window.location.search;
+            //  console.log(jobValueFromUrl)
+
+            //  const urlParamForJobId = new URLSearchParams(jobValueFromUrl);
+            //  const urlParamForJobIdValue = urlParamForJobId.get('id');
+            //  console.log(urlParamForJobIdValue);
+            //  searchStatus(urlParamForJobIdValue);
+
+            // function searchStatus(query){
+            // const url = `https://script.google.com/macros/s/AKfycbxKKswqxumxvVdZ0L10sOlaXufPmRYW_pwE51Z-uumj4MKJ85LN6YIsPO3bk_VJUExuDA/exec?id=${query}`;
+            // fetch(url).then(response => response.text()).then((textData) => { document.getElementById("resultShowSection").innerHTML = `<h1 class="text-3xl lg:text-4xl font-semibold text-gray-800 dark:text-white"> ${textData}</h1>
+            // `;});
+            // }
+
+            //testing for URL redirection.
+            </script> -->
+
+</body>
+</html>
